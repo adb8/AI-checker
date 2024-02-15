@@ -13,15 +13,13 @@ print("AI total")
 def writer_check(driver, text):
     try:
         driver.get("https://writer.com/ai-content-detector/")
-
         textarea = driver.find_element(By.TAG_NAME, "textarea")
         percentage = driver.find_element(By.ID, "ai-percentage")
         button = driver.find_element(By.CLASS_NAME, "dc-btn-gradient")
 
         textarea.send_keys(text)
-        button.send_keys(Keys.END) # scroll to end of page
+        button.send_keys(Keys.END)
         button.click()
-
         while percentage.text == "":
             time.sleep(0.5)
 
@@ -33,7 +31,6 @@ def writer_check(driver, text):
 def cas_check(driver, text):
     try:
         driver.get("https://contentatscale.ai/ai-content-detector/")
-
         textarea = driver.find_element(By.TAG_NAME, "textarea")
         button = driver.find_element(By.CLASS_NAME, "check-ai-score")
         percentage = driver.find_element(By.ID, "progress")
@@ -41,7 +38,6 @@ def cas_check(driver, text):
         textarea.send_keys(text)
         button.send_keys(Keys.END)
         button.click()
-
         while percentage.text == "N/A":
             time.sleep(0.5)
         
@@ -53,16 +49,14 @@ def cas_check(driver, text):
 def zerogpt_check(driver, text):
     try:
         driver.get("https://www.zerogpt.com/")
-
         textarea = driver.find_element(By.TAG_NAME, "textarea")
         button = driver.find_element(By.CLASS_NAME, "scoreButton")
 
         textarea.send_keys(text)
         button.send_keys(Keys.END)
         button.click()
-
-        wait = WebDriverWait(driver, 10) # specifies waiting amount
-        percentage = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".percentage-div span"))) # waits until element is present
+        wait = WebDriverWait(driver, 10)
+        percentage = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".percentage-div span")))
 
         result = int(round(float(percentage.text.split("%", 1)[0])))
         return eval_result(result)
@@ -72,7 +66,6 @@ def zerogpt_check(driver, text):
 def crossplag_check(driver, text):
     try:
         driver.get("https://crossplag.com/ai-content-detector/")
-
         textarea = driver.find_element(By.TAG_NAME, "textarea")
         button = driver.find_element(By.ID, "checkButtonAIGen")
         description = driver.find_element(By.CLASS_NAME, "description")
@@ -97,10 +90,9 @@ def sapling_check(driver, text):
             return "Not enough words"
 
         driver.get("https://sapling.ai/ai-content-detector")
-
         textarea = driver.find_element(By.TAG_NAME, "textarea")
         percentage = driver.find_element(By.ID, "fake-prob")
-
+        
         textarea.clear()
         textarea.send_keys(text)
         time.sleep(5)
@@ -111,7 +103,6 @@ def sapling_check(driver, text):
         return "Error encountered"
     
 def eval_result(result):
-    
     if result >= 0 and result < 25:
         return "Very unlikely"
     elif result >= 25 and result < 50:
@@ -122,12 +113,10 @@ def eval_result(result):
         return "Very likely"
 
 def check():
-
     chrome_options = Options()
     chrome_options.add_argument("--headless") # browser runs in the background
     chrome_options.add_argument("--log-level=3") # disables logging to the console
     chrome_options.add_experimental_option('excludeSwitches', ['enable-logging'])
-
     service = Service(ChromeDriverManager().install()) # installs ChromeDriver binary (connects api and browser)
     driver = webdriver.Chrome(service=service, options=chrome_options) # creates instance of Chrome browser
 
